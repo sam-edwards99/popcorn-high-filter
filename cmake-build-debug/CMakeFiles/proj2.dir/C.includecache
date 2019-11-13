@@ -9,4 +9,6 @@
 /mnt/c/Users/samgo/OneDrive/Documents/school/CMSC 411/proj2/main.c
 stdio.h
 -
+stdlib.h
+-
 
