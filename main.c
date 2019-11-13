@@ -1,13 +1,23 @@
 #include <stdio.h>
 #include <stdlib.h>
-int highpass(char * x, int * w, int * y){
-
-
+int highpass(int len, int *x, FILE * output){
+    int w[len];
+    int y[len];
+    w[0] = 0;
+    y[0] = 0;
+    for(int k = 1; k < len; k++) {
+       w[k] = x[k]+ (0.5 * w[k-1]);
+    }
+    for(int k = 1; k < len; k++) {
+        y[k] = (w[k] - w[k-1]);
+    }
+    //print to output file
+    for (int k = 1; k < len; k++) {
+        fprintf(output," %i\n ", y[k]);
+    }
 }
 int main() {
-        char inputArr[200000];
-        int algorithmArr[200000];
-        int outputArr[200000];
+        int inputArr[200000];
         FILE *input, *output;
         input = fopen("popcorn-audio2.dat", "r");
         output = fopen("cleaned-audio2.dat", "w");
@@ -20,21 +30,7 @@ int main() {
                 inputArr[i] = atoi(numstring);
                 i++;
             }
-            //w[-1] = 0
-            algorithmArr[0] = 0;
-            //w[k] = x[k] + 0.5 w[k-1]
-            for(int k = 1; k < i; k++) {
-                algorithmArr[k] = inputArr[k]+ (0.5 * algorithmArr[k-1]);
-            }
-            //y[k] = w[k] - w[k-1]
-            for(int k = 1; k < i; k++) {
-                outputArr[k] = (algorithmArr[k] - algorithmArr[k-1]);
-            }
-            //print to output file
-            for (int j = 1; j < i; j++) {
-                fprintf(output," %i\n ", algorithmArr[j]);
-                printf(" %i\n ", outputArr[j]);
-            }
+            highpass(i,inputArr,output);
         }
         return 0;
 }
